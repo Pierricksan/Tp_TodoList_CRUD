@@ -1,5 +1,7 @@
 package tp.groupe2.user;
 
+import jakarta.ws.rs.DELETE;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,8 @@ public class UserDao {
     private final String SELECT_ALL_USERS = "Select * from utilisateur";
     private final String ADD_USER = "INSERT INTO utilisateur (nom, prenom) VALUES (?, ?)";
     private final String FIND_ONE_USER_ID = "SELECT * FROM utilisateur WHERE id = ?";
+    private final String UPDATE_BY_ID = "UPDATE utilisateur SET nom = ?, prenom = ? WHERE id = ?";
+    private final String DELETE_BY_ID = "DELETE FROM utilisateur WHERE id = ?";
 
     public List<User> getAllUsers() {
         List<User> userList = null;
@@ -80,6 +84,32 @@ public class UserDao {
             System.out.println(e);
         }
         return null;
+    }
+
+    public void updateUser(User user){
+        try {
+            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+            Connection con = DriverManager.getConnection(url, username, password);
+            PreparedStatement statement = con.prepareStatement(UPDATE_BY_ID);
+            statement.setString(1, user.getNom());
+            statement.setString(2, user.getPrenom());
+            statement.setInt(3, user.getId());
+            statement.executeUpdate();
+        } catch (Exception e){
+            System.out.println(e);
+        }
+    }
+
+    public void deleteUser(int id){
+        try {
+            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+            Connection con = DriverManager.getConnection(url, username, password);
+            PreparedStatement statement = con.prepareStatement(DELETE_BY_ID);
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (Exception e){
+            System.out.println(e);
+        }
     }
 }
 

@@ -2,6 +2,7 @@ package tp.groupe2.domain;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import tp.groupe2.user.User;
 import tp.groupe2.user.UserDao;
 
@@ -40,7 +41,35 @@ public class UserRessource {
         }
     }
 
+    @PUT
+    @Path("/update/{id}")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public User updateById(@PathParam("id") int id,
+                           @FormParam("nom") String nom,
+                           @FormParam("prenom") String prenom) throws SQLException {
 
+        User userToUpdate = userDao.getUserById(id);
+        if(userToUpdate != null){
+            if (nom != null){
+                userToUpdate.setNom(nom);
+            }
+            if (prenom != null){
+                userToUpdate.setPrenom(prenom);
+            }
+            userDao.updateUser(userToUpdate);
+        }
+        return userToUpdate;
+    }
 
-
+@DELETE
+    @Path("/delete/{id}")
+public User supprimerParId(@PathParam("id") int id) throws SQLException {
+        User userDelete = userDao.getUserById(id);
+        if (userDelete != null){
+            userDao.deleteUser(id);
+        } else {
+            return null;
+        }
+        return userDelete;
+    }
 }
