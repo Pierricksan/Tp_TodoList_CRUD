@@ -47,7 +47,6 @@ public class UserRessource {
     public User updateById(@PathParam("id") int id,
                            @FormParam("nom") String nom,
                            @FormParam("prenom") String prenom) throws SQLException {
-
         User userToUpdate = userDao.getUserById(id);
         if(userToUpdate != null){
             if (nom != null){

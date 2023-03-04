@@ -3,9 +3,9 @@ package tp.groupe2.user;
 public class User {
 
         //attribut
-        private int id;
-        private String nom;
-        private String prenom;
+        public int id;
+        public String nom;
+        public String prenom;
         // getter and setter
         public String getNom() {
             return nom;

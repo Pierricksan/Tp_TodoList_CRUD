@@ -7,11 +7,12 @@ import java.util.Date;
 public class Todo {
 
     // attributs
-    private int id;
-    private String titre, description;
-    private Date date;
-    private Urgence urgence;
-    private User user;
+    public int id;
+    public String titre, description;
+    public Date date;
+    public int id_utilisateur;
+    public int id_urgence;
+
 
     // getter and setter
     public int getId() {
@@ -20,13 +21,6 @@ public class Todo {
 
     public void setId(int id) {
         this.id = id;
-    }
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Date getDate() {
@@ -53,20 +47,30 @@ public class Todo {
         this.description = description;
     }
 
-    public Urgence getUrgence() {
-        return urgence;
+    public int getId_utilisateur() {
+        return id_utilisateur;
     }
 
-    public void setUrgence(Urgence urgence) {
-        this.urgence = urgence;
+    public void setId_utilisateur(int id_utilisateur) {
+        this.id_utilisateur = id_utilisateur;
     }
+
+    public int getId_urgence() {
+        return id_urgence;
+    }
+
+    public void setId_urgence(int id_urgence) {
+        this.id_urgence = id_urgence;
+    }
+
     // constructeur
-    public Todo(int id, String titre, String description, Date date, User user, Urgence urgence) {
+    public Todo(int id, String titre, String description, Date date, int id_urgence, int id_utilisateur) {
         this.id = id;
-        this.urgence = urgence;
         this.titre = titre;
         this.description = description;
         this.date = date;
-        this.user = user;
+        this.id_urgence = id_urgence;
+        this.id_utilisateur = id_utilisateur;
+
     }
 }
