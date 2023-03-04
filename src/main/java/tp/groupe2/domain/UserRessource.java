@@ -5,6 +5,7 @@ import jakarta.ws.rs.core.MediaType;
 import tp.groupe2.user.User;
 import tp.groupe2.user.UserDao;
 
+import java.sql.SQLException;
 import java.util.List;
 @Path("/user")
 public class UserRessource {
@@ -26,5 +27,20 @@ public class UserRessource {
         User user = new User(id, nom, prenom);
         return userDao.addUser(user);
     }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public User getById(@PathParam("id") int id) throws SQLException {
+        User user = userDao.getUserById(id);
+        if (user == null){
+            return null;
+        } else {
+            return user;
+        }
+    }
+
+
+
 
 }

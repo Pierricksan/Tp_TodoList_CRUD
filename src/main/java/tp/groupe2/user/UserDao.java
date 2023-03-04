@@ -13,11 +13,11 @@ public class UserDao {
 
     private final String SELECT_ALL_USERS = "Select * from utilisateur";
     private final String ADD_USER = "INSERT INTO utilisateur (nom, prenom) VALUES (?, ?)";
+    private final String FIND_ONE_USER_ID = "SELECT * FROM utilisateur WHERE id = ?";
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         List<User> userList = null;
-        try{
-           // Class.forName("com.mysql.cj.jdbc.Driver");
+        try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
             Connection con = DriverManager.getConnection(url, username, password);
             Statement stmt = con.createStatement();
@@ -30,14 +30,14 @@ public class UserDao {
                 userList.add(new User(id, nom, prenom));
             }
             return userList;
-            } catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e);
-            }
+        }
         return userList;
     }
 
-    public User addUser(User user){
-        try{
+    public User addUser(User user) {
+        try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
             Connection con = DriverManager.getConnection(url, username, password);
             PreparedStatement stmt = con.prepareStatement(ADD_USER, Statement.RETURN_GENERATED_KEYS);
@@ -45,7 +45,7 @@ public class UserDao {
             stmt.setString(2, user.getPrenom());
             stmt.executeUpdate();
             ResultSet generatedKeys = stmt.getGeneratedKeys();
-            if (generatedKeys.next()){
+            if (generatedKeys.next()) {
                 int id = generatedKeys.getInt(1);
                 user.setId(id);
             }
@@ -58,5 +58,28 @@ public class UserDao {
         return user;
     }
 
+    public User getUserById(int id) throws SQLException {
+        try {
+            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+            Connection con = DriverManager.getConnection(url, username, password);
+            PreparedStatement statement = con.prepareStatement(FIND_ONE_USER_ID);
+            statement.setInt(1, id);
 
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    return new User(
+                            result.getInt("id"),
+                            result.getString("nom"),
+                            result.getString("prenom")
+                    );
+                } else {
+                    throw new SQLException("Utilisateur introuvable");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
+    }
 }
+
