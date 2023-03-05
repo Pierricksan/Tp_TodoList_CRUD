@@ -169,4 +169,9 @@ public class TodoDao {
         }
     }
 
+    // Rese à faire :
+    // createTodo par id user (@path /post/user/{id})
+    // createTodo par nom et prenom (@path /post/user/{nom}/{prenom})
+    // updateTodo et deleteTodo !! (en fonction de l'id)
+
 }
