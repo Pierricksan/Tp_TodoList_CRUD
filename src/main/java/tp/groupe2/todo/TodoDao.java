@@ -1,23 +1,22 @@
 package tp.groupe2.todo;
 
-import tp.groupe2.user.User;
-
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class TodoDao {
 
-    private final String url = "jdbc:mysql://localhost:3306/todolistetp?useSSL=false&allowPublicKeyRetrieval=true";
-    private final String username = "root";
-    private final String password = "NEWpassword@";
+    private static final String url = "jdbc:mysql://localhost:3306/todolistetp?useSSL=false&allowPublicKeyRetrieval=true";
+    private static final String username = "root";
+    private static final String password = "root";
     private final String SELECT_ALL_TODO = "select * from todo";
     private final String FIND_ONE_TODO_ID = "SELECT * FROM todo WHERE id = ?";
     private final String FIND_TODOS_ID_USER = "SELECT * FROM todo WHERE id_utilisateur = ?";
     private final String FIND_TODOS_ID_URGENCE = "SELECT * FROM todo WHERE id_urgence = ?";
-    private final String FIND_TODOS_ID_URGENCE_USER = "SELECT * FROM todo WHERE id_urgence = ? OR id_utilisateur = ?";
+    private final String FIND_TODOS_ID_URGENCE_USER = "SELECT * FROM todo WHERE id_urgence = ? AND id_utilisateur = ?";
+    private static final String CREATE_TODO = "INSERT INTO todo (titre, descriptionTodo, dateTodo, id_urgence, id_utilisateur) VALUES (?, ?, ?, ?, ?);";
+
 //    Date aujourdhui = new Date();
 //    SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yy");
 //    System.out.println(formater.format(aujourdhui));
@@ -150,6 +149,24 @@ public class TodoDao {
             System.out.println(e);
         }
         return todoListUrgenceAndUser;
+    }
+
+    public static void createTodo(Todo todo) {
+        try {
+            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+            Connection con = DriverManager.getConnection(url, username, password);
+            PreparedStatement statement = con.prepareStatement(CREATE_TODO);
+
+            statement.setString(1, todo.getTitre());
+            statement.setString(2, todo.getDescription());
+            statement.setDate(3, todo.getDate());
+            statement.setInt(4, todo.getId_urgence());
+            statement.setInt(5, todo.getId_utilisateur());
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

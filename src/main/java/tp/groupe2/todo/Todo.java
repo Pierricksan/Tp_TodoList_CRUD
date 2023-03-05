@@ -1,18 +1,37 @@
 package tp.groupe2.todo;
 
-import tp.groupe2.Urgence.Urgence;
-import tp.groupe2.user.User;
 import java.util.Date;
 
 public class Todo {
 
     // attributs
     public int id;
-    public String titre, description;
-    public Date date;
+    public String titre;
+    public String descriptionTodo;
+    public Date dateTodo;
     public int id_utilisateur;
     public int id_urgence;
 
+    // constructeurs
+    public Todo() {
+
+    }
+    public Todo(String titre, String descriptionTodo, Date dateTodo, int id_urgence, int id_utilisateur) {
+        this.titre = titre;
+        this.descriptionTodo = descriptionTodo;
+        this.dateTodo = dateTodo;
+        this.id_urgence = id_urgence;
+        this.id_utilisateur = id_utilisateur;
+    }
+    public Todo(int id, String titre, String descriptionTodo, Date dateTodo, int id_urgence, int id_utilisateur) {
+        this.id = id;
+        this.titre = titre;
+        this.descriptionTodo = descriptionTodo;
+        this.dateTodo = dateTodo;
+        this.id_urgence = id_urgence;
+        this.id_utilisateur = id_utilisateur;
+
+    }
 
     // getter and setter
     public int getId() {
@@ -23,12 +42,12 @@ public class Todo {
         this.id = id;
     }
 
-    public Date getDate() {
-        return date;
+    public java.sql.Date getDate() {
+        return (java.sql.Date) dateTodo;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(Date dateTodo) {
+        this.dateTodo = dateTodo;
     }
 
     public String getTitre() {
@@ -40,11 +59,11 @@ public class Todo {
     }
 
     public String getDescription() {
-        return description;
+        return descriptionTodo;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescription(String descriptionTodo) {
+        this.descriptionTodo = descriptionTodo;
     }
 
     public int getId_utilisateur() {
@@ -61,16 +80,5 @@ public class Todo {
 
     public void setId_urgence(int id_urgence) {
         this.id_urgence = id_urgence;
-    }
-
-    // constructeur
-    public Todo(int id, String titre, String description, Date date, int id_urgence, int id_utilisateur) {
-        this.id = id;
-        this.titre = titre;
-        this.description = description;
-        this.date = date;
-        this.id_urgence = id_urgence;
-        this.id_utilisateur = id_utilisateur;
-
     }
 }

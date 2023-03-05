@@ -1,16 +1,13 @@
 package tp.groupe2.domain;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import tp.groupe2.todo.Todo;
 import tp.groupe2.todo.TodoDao;
-import tp.groupe2.user.User;
-import tp.groupe2.user.UserDao;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 @Path("/todos")
@@ -60,4 +57,16 @@ public class TodoRessource {
         return todoDao.getTodoByUrgenceAndUserId(id_urgence, id_user);
     }
 
+    @POST
+    @Path("/post")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response ajouterTodo(@FormParam("titre") String titre,
+                                @FormParam("descriptionTodo") String descriptionTodo,
+                                @FormParam("dateTodo") Date dateTodo,
+                                @FormParam("id_urgence") int id_urgence,
+                                @FormParam("id_utilisateur") int id_utilisateur) {
+        Todo todo = new Todo(titre, descriptionTodo, dateTodo, id_urgence, id_utilisateur);
+        TodoDao.createTodo(todo);
+        return Response.status(201).entity("Todo created successfully.").build();
+    }
 }
