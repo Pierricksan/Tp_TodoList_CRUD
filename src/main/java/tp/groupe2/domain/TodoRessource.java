@@ -14,13 +14,31 @@ import java.util.List;
 public class TodoRessource {
     // initialisation du TodoDao
     TodoDao todoDao = new TodoDao();
+
     // Obtenir TOUS les todos
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Todo> displayAllUsers(){
         return todoDao.getAllTodo();
     }
-// Obtenir Todo par id
+
+    // Obtenir TOUS les todos triés par user
+    @GET
+    @Path("/orderbyuser")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Todo> displayAllUsers2(){
+        return todoDao.getAllTodoOrderByUser();
+    }
+
+    // Obtenir TOUS les todos triés par urgence
+    @GET
+    @Path("/orderbyurgence")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Todo> displayAllUsers3(){
+        return todoDao.getAllTodoOrderByUrgence();
+    }
+
+    // Obtenir Todo par id
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -32,7 +50,8 @@ public class TodoRessource {
             return todo;
         }
     }
-// Obtenir liste de todo en fonction de l'id utilisateur
+
+    // Obtenir liste de todo en fonction de l'id utilisateur
     @GET
     @Path("user/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -57,6 +76,7 @@ public class TodoRessource {
         return todoDao.getTodoByUrgenceAndUserId(id_urgence, id_user);
     }
 
+    // Ajouter une todo
     @POST
     @Path("/post")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
