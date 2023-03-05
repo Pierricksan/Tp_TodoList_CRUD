@@ -24,78 +24,46 @@ public class TodoDao {
 //    System.out.println(formater.format(aujourdhui));
 
     public List<Todo> getAllTodo() {
-        List<Todo> todoList = null;
-        try {
-            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-            Connection con = DriverManager.getConnection(url, username, password);
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(SELECT_ALL_TODO);
-            todoList = new ArrayList<>();
-            while (rs.next()) {
-                int id = rs.getInt(1);
-                String titre = rs.getString(2);
-                String description = rs.getString(3);
-                Date date = rs.getDate(4);
-                int userId = rs.getInt(5);
-                int urgenceId = rs.getInt(6);
-                todoList.add(new Todo(id, titre, description, date, userId, urgenceId));
-            }
-            return todoList;
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return todoList;
+        return getTodos(SELECT_ALL_TODO);
     }
 
     public List<Todo> getAllTodoOrderByUser() {
-        List<Todo> todoList = null;
-        try {
-            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-            Connection con = DriverManager.getConnection(url, username, password);
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(SELECT_ALL_TODO_ORDER_BY_USER);
-            todoList = new ArrayList<>();
-            while (rs.next()) {
-                int id = rs.getInt(1);
-                String titre = rs.getString(2);
-                String description = rs.getString(3);
-                Date date = rs.getDate(4);
-                int userId = rs.getInt(5);
-                int urgenceId = rs.getInt(6);
-                todoList.add(new Todo(id, titre, description, date, userId, urgenceId));
-            }
-            return todoList;
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return todoList;
+        return getTodos(SELECT_ALL_TODO_ORDER_BY_USER);
     }
 
     public List<Todo> getAllTodoOrderByUrgence() {
+        return getTodos(SELECT_ALL_TODO_ORDER_BY_URGENCE);
+    }
+
+    private List<Todo> getTodos(String selectAllTodoOrderByUrgence) {
         List<Todo> todoList = null;
         try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
             Connection con = DriverManager.getConnection(url, username, password);
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(SELECT_ALL_TODO_ORDER_BY_URGENCE);
+            ResultSet rs = stmt.executeQuery(selectAllTodoOrderByUrgence);
             todoList = new ArrayList<>();
-            while (rs.next()) {
-                int id = rs.getInt(1);
-                String titre = rs.getString(2);
-                String description = rs.getString(3);
-                Date date = rs.getDate(4);
-                int userId = rs.getInt(5);
-                int urgenceId = rs.getInt(6);
-                todoList.add(new Todo(id, titre, description, date, userId, urgenceId));
-            }
-            return todoList;
+            return getTodos(todoList, rs);
         } catch (Exception e) {
             System.out.println(e);
         }
         return todoList;
     }
 
-    public Todo getTodoById(int id) throws SQLException {
+    private List<Todo> getTodos(List<Todo> todoList, ResultSet rs) throws SQLException {
+        while (rs.next()) {
+            int id = rs.getInt(1);
+            String titre = rs.getString(2);
+            String description = rs.getString(3);
+            Date date = rs.getDate(4);
+            int userId = rs.getInt(5);
+            int urgenceId = rs.getInt(6);
+            todoList.add(new Todo(id, titre, description, date, userId, urgenceId));
+        }
+        return todoList;
+    }
+
+    public Todo getTodoById(int id) {
         try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
             Connection con = DriverManager.getConnection(url, username, password);
@@ -121,25 +89,20 @@ public class TodoDao {
         return null;
     }
 
-    public List<Todo> getTodoByUserId(int id_user) throws SQLException {
+    public List<Todo> getTodoByUserId(int id_user) {
+        return getTodos(id_user, FIND_TODOS_ID_USER);
+    }
+
+    private List<Todo> getTodos(int id_user, String findTodosIdUser) {
         List<Todo> todoListUser = null;
         try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
             Connection con = DriverManager.getConnection(url, username, password);
-            PreparedStatement statement = con.prepareStatement(FIND_TODOS_ID_USER);
+            PreparedStatement statement = con.prepareStatement(findTodosIdUser);
             statement.setInt(1, id_user);
             todoListUser = new ArrayList<>();
             try (ResultSet result = statement.executeQuery()) {
-                while (result.next()) {
-                           int id = result.getInt(1);
-                           String titre = result.getString(2);
-                           String description = result.getString(3);
-                           Date date = result.getDate(4);
-                           int id_urgence = result.getInt(5);
-                           int id_utilisateur = result.getInt(6);
-                           todoListUser.add(new Todo(id, titre, description, date, id_urgence, id_utilisateur));
-                }
-                return todoListUser;
+                return getTodos(todoListUser, result);
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -147,34 +110,12 @@ public class TodoDao {
         return todoListUser;
     }
 
-    public List<Todo> getTodoByUrgenceId(int id_urge) throws SQLException {
-        List<Todo> todoListUrgence = null;
-        try {
-            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-            Connection con = DriverManager.getConnection(url, username, password);
-            PreparedStatement statement = con.prepareStatement(FIND_TODOS_ID_URGENCE);
-            statement.setInt(1, id_urge);
-            todoListUrgence = new ArrayList<>();
-            try (ResultSet result = statement.executeQuery()) {
-                while (result.next()) {
-                    int id = result.getInt(1);
-                    String titre = result.getString(2);
-                    String description = result.getString(3);
-                    Date date = result.getDate(4);
-                    int id_urgence = result.getInt(5);
-                    int id_utilisateur = result.getInt(6);
-                    todoListUrgence.add(new Todo(id, titre, description, date, id_urgence, id_utilisateur));
-                }
-                return todoListUrgence;
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return todoListUrgence;
+    public List<Todo> getTodoByUrgenceId(int id_urge) {
+        return getTodos(id_urge, FIND_TODOS_ID_URGENCE);
     }
 
 
-    public List<Todo> getTodoByUrgenceAndUserId(int id_urge, int id_user) throws SQLException {
+    public List<Todo> getTodoByUrgenceAndUserId(int id_urge, int id_user) {
         List<Todo> todoListUrgenceAndUser = null;
         try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
@@ -184,16 +125,7 @@ public class TodoDao {
             statement.setInt(2, id_user);
             todoListUrgenceAndUser = new ArrayList<>();
             try (ResultSet result = statement.executeQuery()) {
-                while (result.next()) {
-                    int id = result.getInt(1);
-                    String titre = result.getString(2);
-                    String description = result.getString(3);
-                    Date date = result.getDate(4);
-                    int id_urgence = result.getInt(5);
-                    int id_utilisateur = result.getInt(6);
-                    todoListUrgenceAndUser.add(new Todo(id, titre, description, date, id_urgence, id_utilisateur));
-                }
-                return todoListUrgenceAndUser;
+                return getTodos(todoListUrgenceAndUser, result);
             }
         } catch (Exception e) {
             System.out.println(e);
