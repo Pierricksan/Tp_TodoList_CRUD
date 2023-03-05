@@ -15,13 +15,15 @@ import java.util.List;
 
 @Path("/todos")
 public class TodoRessource {
+    // initialisation du TodoDao
     TodoDao todoDao = new TodoDao();
+    // Obtenir TOUS les todos
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Todo> displayAllUsers(){
         return todoDao.getAllTodo();
     }
-
+// Obtenir Todo par id
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -33,4 +35,29 @@ public class TodoRessource {
             return todo;
         }
     }
+// Obtenir liste de todo en fonction de l'id utilisateur
+    @GET
+    @Path("user/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Todo> getByUserId(@PathParam("id") int id_user) throws SQLException {
+        return todoDao.getTodoByUserId(id_user);
+    }
+
+    // Obtenir liste de todo en fonction de l'id utilisateur
+    @GET
+    @Path("urgence/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Todo> getTodoByUrgenceId(@PathParam("id") int id_urgence) throws SQLException {
+        return todoDao.getTodoByUrgenceId(id_urgence);
+    }
+
+    // Obtenir liste de todo en fonction de l'id utilisateur
+    @GET
+    @Path("urgence/{id_urge}/user/{id_user}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Todo> getTodoByUrgenceAndUserId(@PathParam("id_urge") int id_urgence,
+                                                @PathParam("id_user") int id_user) throws SQLException {
+        return todoDao.getTodoByUrgenceAndUserId(id_urgence, id_user);
+    }
+
 }
