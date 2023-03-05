@@ -60,9 +60,10 @@ public class UserRessource {
         return userToUpdate;
     }
 
-@DELETE
+    // cela supprimera l'utilisateur et les todos qui lui sont liés
+    @DELETE
     @Path("/delete/{id}")
-public User supprimerParId(@PathParam("id") int id) throws SQLException {
+    public User supprimerParId(@PathParam("id") int id) throws SQLException {
         User userDelete = userDao.getUserById(id);
         if (userDelete != null){
             userDao.deleteUser(id);
