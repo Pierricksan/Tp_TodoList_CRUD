@@ -18,7 +18,7 @@ public class TodoDao {
     private final String FIND_TODOS_ID_USER = "SELECT * FROM todo WHERE id_utilisateur = ?";
     private final String FIND_TODOS_ID_URGENCE = "SELECT * FROM todo WHERE id_urgence = ?";
     private final String FIND_TODOS_ID_URGENCE_USER = "SELECT * FROM todo WHERE id_urgence = ? AND id_utilisateur = ?";
-    private static final String CREATE_TODO = "INSERT INTO todo (titre, descriptionTodo, dateTodo, id_urgence, id_utilisateur) VALUES (?, ?, ?, ?, ?);";
+    private static final String CREATE_TODO = "INSERT INTO todo (titre, descriptionTodo, dateTodo, id_urgence, id_utilisateur) VALUES (?, ?, ?, ?, ?)";
     private final String UPDATE_BY_ID = "UPDATE todo SET titre = ?, descriptionTodo = ?, dateTodo = ?, id_urgence = ?, id_utilisateur = ? WHERE id = ?";
 
     public List<Todo> getAllTodo() {
@@ -32,11 +32,11 @@ public class TodoDao {
             while (rs.next()) {
                 int id = rs.getInt(1);
                 String titre = rs.getString(2);
-                String description = rs.getString(3);
-                Date date = rs.getDate(4);
+                String descriptionTodo = rs.getString(3);
+                Date dateTodo = rs.getDate(4);
                 int userId = rs.getInt(5);
                 int urgenceId = rs.getInt(6);
-                todoList.add(new Todo(id, titre, description, date, userId, urgenceId));
+                todoList.add(new Todo(id, titre, descriptionTodo, dateTodo, userId, urgenceId));
             }
             return todoList;
         } catch (Exception e) {
@@ -56,11 +56,11 @@ public class TodoDao {
             while (rs.next()) {
                 int id = rs.getInt(1);
                 String titre = rs.getString(2);
-                String description = rs.getString(3);
+                String descriptionTodo = rs.getString(3);
                 Date date = rs.getDate(4);
                 int userId = rs.getInt(5);
                 int urgenceId = rs.getInt(6);
-                todoList.add(new Todo(id, titre, description, date, userId, urgenceId));
+                todoList.add(new Todo(id, titre, descriptionTodo, date, userId, urgenceId));
             }
             return todoList;
         } catch (Exception e) {
@@ -80,11 +80,11 @@ public class TodoDao {
             while (rs.next()) {
                 int id = rs.getInt(1);
                 String titre = rs.getString(2);
-                String description = rs.getString(3);
+                String descriptionTodo = rs.getString(3);
                 Date date = rs.getDate(4);
                 int userId = rs.getInt(5);
                 int urgenceId = rs.getInt(6);
-                todoList.add(new Todo(id, titre, description, date, userId, urgenceId));
+                todoList.add(new Todo(id, titre, descriptionTodo, date, userId, urgenceId));
             }
             return todoList;
         } catch (Exception e) {
@@ -131,11 +131,11 @@ public class TodoDao {
                 while (result.next()) {
                            int id = result.getInt(1);
                            String titre = result.getString(2);
-                           String description = result.getString(3);
+                           String descriptionTodo = result.getString(3);
                            Date date = result.getDate(4);
                            int id_urgence = result.getInt(5);
                            int id_utilisateur = result.getInt(6);
-                           todoListUser.add(new Todo(id, titre, description, date, id_urgence, id_utilisateur));
+                           todoListUser.add(new Todo(id, titre, descriptionTodo, date, id_urgence, id_utilisateur));
                 }
                 return todoListUser;
             }
@@ -145,7 +145,7 @@ public class TodoDao {
         return todoListUser;
     }
 
-    public List<Todo> getTodoByUrgenceId(int id_urge) throws SQLException {
+    public List<Todo> getTodoByUrgenceId(int id_urge) {
         List<Todo> todoListUrgence = null;
         try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
@@ -157,11 +157,11 @@ public class TodoDao {
                 while (result.next()) {
                     int id = result.getInt(1);
                     String titre = result.getString(2);
-                    String description = result.getString(3);
+                    String descriptionTodo = result.getString(3);
                     Date date = result.getDate(4);
                     int id_urgence = result.getInt(5);
                     int id_utilisateur = result.getInt(6);
-                    todoListUrgence.add(new Todo(id, titre, description, date, id_urgence, id_utilisateur));
+                    todoListUrgence.add(new Todo(id, titre, descriptionTodo, date, id_urgence, id_utilisateur));
                 }
                 return todoListUrgence;
             }
@@ -185,11 +185,11 @@ public class TodoDao {
                 while (result.next()) {
                     int id = result.getInt(1);
                     String titre = result.getString(2);
-                    String description = result.getString(3);
+                    String descriptionTodo = result.getString(3);
                     Date date = result.getDate(4);
                     int id_urgence = result.getInt(5);
                     int id_utilisateur = result.getInt(6);
-                    todoListUrgenceAndUser.add(new Todo(id, titre, description, date, id_urgence, id_utilisateur));
+                    todoListUrgenceAndUser.add(new Todo(id, titre, descriptionTodo, date, id_urgence, id_utilisateur));
                 }
                 return todoListUrgenceAndUser;
             }
@@ -206,7 +206,7 @@ public class TodoDao {
             PreparedStatement statement = con.prepareStatement(CREATE_TODO);
 
             statement.setString(1, todo.getTitre());
-            statement.setString(2, todo.getDescription());
+            statement.setString(2, todo.getDescriptionTodo());
             statement.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
             statement.setInt(4, todo.getId_urgence());
             statement.setInt(5, todo.getId_utilisateur());
@@ -223,11 +223,12 @@ public class TodoDao {
             Connection con = DriverManager.getConnection(url, username, password);
             PreparedStatement statement = con.prepareStatement(UPDATE_BY_ID);
             statement.setString(1, todo.getTitre());
-            statement.setString(2, todo.getDescription());
+            statement.setString(2, todo.getDescriptionTodo());
             statement.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
             statement.setInt(4, todo.getId_urgence());
             statement.setInt(5, todo.getId_utilisateur());
             statement.executeUpdate();
+            statement.close();
         } catch (SQLException e){
             e.printStackTrace();
         }

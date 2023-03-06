@@ -42,7 +42,7 @@ public class Todo {
         this.id = id;
     }
 
-    public java.sql.Date getDate() {
+    public java.sql.Date getDate(java.sql.Date dateTodo) {
         return (java.sql.Date) dateTodo;
     }
 
@@ -58,11 +58,11 @@ public class Todo {
         this.titre = titre;
     }
 
-    public String getDescription() {
+    public String getDescriptionTodo() {
         return descriptionTodo;
     }
 
-    public void setDescription(String descriptionTodo) {
+    public void setDescriptionTodo(String descriptionTodo) {
         this.descriptionTodo = descriptionTodo;
     }
 

@@ -82,7 +82,7 @@ public class TodoRessource {
                                 @FormParam("id_utilisateur") int id_utilisateur) {
         Todo todo = new Todo(titre, descriptionTodo, dateTodo, id_urgence, id_utilisateur);
         TodoDao.createTodo(todo);
-        return Response.status(201).entity("Todo created successfully.").build();
+        return Response.status(201).entity(todo).build();
     }
 
     @PUT
@@ -100,10 +100,10 @@ public class TodoRessource {
                 todoToUpdate.setTitre(titre);
             }
             if (descriptionTodo != null){
-                todoToUpdate.setDescription(descriptionTodo);
+                todoToUpdate.setDescriptionTodo(descriptionTodo);
             }
             if (dateTodo != null){
-                todoToUpdate.setDate(dateTodo);
+                todoToUpdate.setDateTodo(dateTodo);
             }
             if (id_urgence != 0){
                 todoToUpdate.setId_urgence(id_urgence);
