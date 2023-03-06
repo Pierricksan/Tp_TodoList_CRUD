@@ -1,6 +1,7 @@
 package tp.groupe2.todo;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -141,7 +142,7 @@ public class TodoDao {
 
             statement.setString(1, todo.getTitre());
             statement.setString(2, todo.getDescription());
-            statement.setDate(3, todo.getDate());
+            statement.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
             statement.setInt(4, todo.getId_urgence());
             statement.setInt(5, todo.getId_utilisateur());
             statement.executeUpdate();
@@ -155,5 +156,6 @@ public class TodoDao {
     // createTodo par id user (@path /post/user/{id})
     // createTodo par nom et prenom (@path /post/user/{nom}/{prenom})
     // updateTodo et deleteTodo !! (en fonction de l'id)
+
 
 }
