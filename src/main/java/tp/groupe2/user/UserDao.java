@@ -1,7 +1,5 @@
 package tp.groupe2.user;
 
-import jakarta.ws.rs.DELETE;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +9,7 @@ public class UserDao {
     // Le constructeur pour initilialiser la base de données
     private final String url = "jdbc:mysql://localhost:3306/todolistetp?useSSL=false&allowPublicKeyRetrieval=true";
     private final String username = "root";
-    private final String password = "NEWpassword@";
+    private final String password = "root";
 
     private final String SELECT_ALL_USERS = "Select * from utilisateur";
     private final String ADD_USER = "INSERT INTO utilisateur (nom, prenom) VALUES (?, ?)";

@@ -43,12 +43,7 @@ public class TodoRessource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Todo getById(@PathParam("id") int id) throws SQLException {
-        Todo todo = todoDao.getTodoById(id);
-        if (todo == null){
-            return null;
-        } else {
-            return todo;
-        }
+        return todoDao.getTodoById(id);
     }
 
     // Obtenir liste de todo en fonction de l'id utilisateur
@@ -88,5 +83,36 @@ public class TodoRessource {
         Todo todo = new Todo(titre, descriptionTodo, dateTodo, id_urgence, id_utilisateur);
         TodoDao.createTodo(todo);
         return Response.status(201).entity("Todo created successfully.").build();
+    }
+
+    @PUT
+    @Path("/update/{id}")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Todo updateById(@PathParam("id") int id,
+                           @FormParam("titre") String titre,
+                           @FormParam("descriptionTodo") String descriptionTodo,
+                           @FormParam("dateTodo") Date dateTodo,
+                           @FormParam("id_urgence") int id_urgence,
+                           @FormParam("id_utilisateur") int id_utilisateur) throws SQLException {
+        Todo todoToUpdate = todoDao.getTodoById(id);
+        if(todoToUpdate != null){
+            if (titre != null){
+                todoToUpdate.setTitre(titre);
+            }
+            if (descriptionTodo != null){
+                todoToUpdate.setDescription(descriptionTodo);
+            }
+            if (dateTodo != null){
+                todoToUpdate.setDate(dateTodo);
+            }
+            if (id_urgence != 0){
+                todoToUpdate.setId_urgence(id_urgence);
+            }
+            if (id_utilisateur != 0){
+                todoToUpdate.setId_utilisateur(id_utilisateur);
+            }
+            todoDao.updateTodo(todoToUpdate);
+        }
+        return todoToUpdate;
     }
 }

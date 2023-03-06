@@ -19,10 +19,7 @@ public class TodoDao {
     private final String FIND_TODOS_ID_URGENCE = "SELECT * FROM todo WHERE id_urgence = ?";
     private final String FIND_TODOS_ID_URGENCE_USER = "SELECT * FROM todo WHERE id_urgence = ? AND id_utilisateur = ?";
     private static final String CREATE_TODO = "INSERT INTO todo (titre, descriptionTodo, dateTodo, id_urgence, id_utilisateur) VALUES (?, ?, ?, ?, ?);";
-
-//    Date aujourdhui = new Date();
-//    SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yy");
-//    System.out.println(formater.format(aujourdhui));
+    private final String UPDATE_BY_ID = "UPDATE todo SET titre = ?, descriptionTodo = ?, dateTodo = ?, id_urgence = ?, id_utilisateur = ? WHERE id = ?";
 
     public List<Todo> getAllTodo() {
         List<Todo> todoList = null;
@@ -43,7 +40,7 @@ public class TodoDao {
             }
             return todoList;
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return todoList;
     }
@@ -67,7 +64,7 @@ public class TodoDao {
             }
             return todoList;
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return todoList;
     }
@@ -91,7 +88,7 @@ public class TodoDao {
             }
             return todoList;
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return todoList;
     }
@@ -117,7 +114,7 @@ public class TodoDao {
                 }
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return null;
     }
@@ -143,7 +140,7 @@ public class TodoDao {
                 return todoListUser;
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return todoListUser;
     }
@@ -169,7 +166,7 @@ public class TodoDao {
                 return todoListUrgence;
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return todoListUrgence;
     }
@@ -197,7 +194,7 @@ public class TodoDao {
                 return todoListUrgenceAndUser;
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return todoListUrgenceAndUser;
     }
@@ -220,9 +217,19 @@ public class TodoDao {
         }
     }
 
-    // Rese à faire :
-    // createTodo par id user (@path /post/user/{id})
-    // createTodo par nom et prenom (@path /post/user/{nom}/{prenom})
-    // updateTodo et deleteTodo !! (en fonction de l'id)
-
+    public void updateTodo(Todo todo){
+        try {
+            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+            Connection con = DriverManager.getConnection(url, username, password);
+            PreparedStatement statement = con.prepareStatement(UPDATE_BY_ID);
+            statement.setString(1, todo.getTitre());
+            statement.setString(2, todo.getDescription());
+            statement.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
+            statement.setInt(4, todo.getId_urgence());
+            statement.setInt(5, todo.getId_utilisateur());
+            statement.executeUpdate();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
 }
