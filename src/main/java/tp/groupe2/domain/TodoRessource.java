@@ -42,33 +42,49 @@ public class TodoRessource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Todo getById(@PathParam("id") int id) throws SQLException {
-        return todoDao.getTodoById(id);
+    public Response getById(@PathParam("id") int id) throws SQLException {
+        Todo todo = todoDao.getTodoById(id);
+        if (todo == null) {
+            return Response.status(404).entity("Todo introuvable").build();
+        }
+        return Response.ok(todo, MediaType.APPLICATION_JSON).header("Message confirmation", "TODO GET").build();
     }
 
     // Obtenir liste de todo en fonction de l'id utilisateur
     @GET
     @Path("user/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Todo> getByUserId(@PathParam("id") int id_user) throws SQLException {
-        return todoDao.getTodoByUserId(id_user);
+    public Response getByUserId(@PathParam("id") int id_user) throws SQLException {
+        List<Todo> list =  todoDao.getTodoByUserId(id_user);
+        if (list.isEmpty()) {
+            return Response.status(204).header("Message confirmation", "Liste vide").build();
+        }
+            return Response.ok(list, MediaType.APPLICATION_JSON).header("Message confirmation", "LIST GET").build();
     }
 
     // Obtenir liste de todo en fonction de l'id utilisateur
     @GET
     @Path("urgence/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Todo> getTodoByUrgenceId(@PathParam("id") int id_urgence) throws SQLException {
-        return todoDao.getTodoByUrgenceId(id_urgence);
+    public Response getTodoByUrgenceId(@PathParam("id") int id_urgence) {
+        List<Todo> list =  todoDao.getTodoByUrgenceId(id_urgence);
+        if (list.isEmpty()) {
+            return Response.status(204).header("Message confirmation", "Aucune urgence correspondante").build();
+        }
+        return Response.ok(list, MediaType.APPLICATION_JSON).header("Message confirmation", "LIST GET").build();
     }
 
     // Obtenir liste de todo en fonction de l'id utilisateur
     @GET
     @Path("urgence/{id_urge}/user/{id_user}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Todo> getTodoByUrgenceAndUserId(@PathParam("id_urge") int id_urgence,
+    public Response getTodoByUrgenceAndUserId(@PathParam("id_urge") int id_urgence,
                                                 @PathParam("id_user") int id_user) throws SQLException {
-        return todoDao.getTodoByUrgenceAndUserId(id_urgence, id_user);
+        List<Todo> list =  todoDao.getTodoByUrgenceAndUserId(id_urgence, id_user);
+        if (list.isEmpty()) {
+            return Response.status(204).header("Message confirmation", "Aucun todo avec l'id urgence et l'id user correspondants").build();
+        }
+        return Response.ok(list, MediaType.APPLICATION_JSON).header("Message confirmation", "LIST TODO GET").build();
     }
 
     // Ajouter une todo
@@ -88,7 +104,7 @@ public class TodoRessource {
     @PUT
     @Path("/update/{id}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Todo updateById(@PathParam("id") int id,
+    public Response updateById(@PathParam("id") int id,
                            @FormParam("titre") String titre,
                            @FormParam("descriptionTodo") String descriptionTodo,
                            @FormParam("dateTodo") Date dateTodo,
@@ -113,18 +129,17 @@ public class TodoRessource {
             }
             todoDao.updateTodo(todoToUpdate);
         }
-        return todoToUpdate;
+        return Response.ok().header("Message confirmation", "TODO Bien modifie").entity(todoToUpdate).build();
     }
 
     @DELETE
     @Path("/delete/{id}")
-    public Todo supprimerParId(@PathParam("id") int id) throws SQLException {
+    public Response supprimerParId(@PathParam("id") int id) throws SQLException {
         Todo todoDelete = todoDao.getTodoById(id);
         if (todoDelete != null){
             todoDao.deleteTodo(id);
+            return Response.ok().header("Message confirmation", "TODO Bien supprime").entity(todoDelete).build();
         } else {
-            return null;
+                return Response.status(404).entity("Erreur !!! Le todo n'existe pas !").build();}
         }
-        return todoDelete;
-    }
 }
