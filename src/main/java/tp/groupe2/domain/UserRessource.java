@@ -22,29 +22,29 @@ public class UserRessource {
     @Path("/post")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public User addUser(@FormParam("id") int id,
+    public Response addUser(@FormParam("id") int id,
                         @FormParam("nom") String nom,
                         @FormParam("prenom") String prenom) {
         User user = new User(id, nom, prenom);
-        return userDao.addUser(user);
+        userDao.addUser(user);
+        return Response.status(201).header("Message confirmation", "USER bien ajoute").entity(user).build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public User getById(@PathParam("id") int id) throws SQLException {
+    public Response getById(@PathParam("id") int id) throws SQLException {
         User user = userDao.getUserById(id);
-        if (user == null){
-            return null;
-        } else {
-            return user;
+        if (user == null) {
+            return Response.status(404).entity("Todo introuvable").build();
         }
+        return Response.ok(user, MediaType.APPLICATION_JSON).header("Message confirmation", "USER GET").build();
     }
 
     @PUT
     @Path("/update/{id}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public User updateById(@PathParam("id") int id,
+    public Response updateById(@PathParam("id") int id,
                            @FormParam("nom") String nom,
                            @FormParam("prenom") String prenom) throws SQLException {
         User userToUpdate = userDao.getUserById(id);
@@ -57,19 +57,19 @@ public class UserRessource {
             }
             userDao.updateUser(userToUpdate);
         }
-        return userToUpdate;
+        return Response.ok().header("Message confirmation", "USER Bien modifie").entity(userToUpdate).build();
     }
 
     // cela supprimera l'utilisateur et les todos qui lui sont liés
     @DELETE
     @Path("/delete/{id}")
-    public User supprimerParId(@PathParam("id") int id) throws SQLException {
+    public Response supprimerParId(@PathParam("id") int id) throws SQLException {
         User userDelete = userDao.getUserById(id);
         if (userDelete != null){
             userDao.deleteUser(id);
+            return Response.ok().header("Message confirmation", "USER Bien supprime").entity(userDelete).build();
         } else {
-            return null;
+            return Response.status(404).entity("Erreur !!! Le user n'existe pas !").build();
         }
-        return userDelete;
     }
 }

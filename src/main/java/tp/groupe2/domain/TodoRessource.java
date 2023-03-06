@@ -98,7 +98,7 @@ public class TodoRessource {
                                 @FormParam("id_utilisateur") int id_utilisateur) {
         Todo todo = new Todo(titre, descriptionTodo, dateTodo, id_urgence, id_utilisateur);
         TodoDao.createTodo(todo);
-        return Response.status(201).entity(todo).build();
+        return Response.status(201).header("Message confirmation", "TODO Bien ajoute").entity(todo).build();
     }
 
     @PUT

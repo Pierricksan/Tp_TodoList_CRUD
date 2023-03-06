@@ -1,7 +1,5 @@
 package tp.groupe2.Urgence;
 
-import tp.groupe2.user.User;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +8,7 @@ public class UrgenceDao {
 
     private final String url = "jdbc:mysql://localhost:3306/todolistetp?useSSL=false&allowPublicKeyRetrieval=true";
     private final String username = "root";
-    private final String password = "NEWpassword@";
+    private final String password = "root";
     private final String SELECT_ALL_URGENCE = "select * from urgence";
     private final String ADD_URGENCE = "INSERT INTO urgence (nom) VALUES (?)";
     private final String FIND_ONE_URGENCE_ID = "SELECT * FROM urgence WHERE id = ?";
