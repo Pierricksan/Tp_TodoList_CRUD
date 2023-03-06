@@ -42,11 +42,11 @@ public class Todo {
         this.id = id;
     }
 
-    public java.sql.Date getDate(java.sql.Date dateTodo) {
+    public java.sql.Date getDateTodo() {
         return (java.sql.Date) dateTodo;
     }
 
-    public void setDate(Date dateTodo) {
+    public void setDateTodo(Date dateTodo) {
         this.dateTodo = dateTodo;
     }
 

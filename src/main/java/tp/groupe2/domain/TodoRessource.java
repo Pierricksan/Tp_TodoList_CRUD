@@ -115,4 +115,16 @@ public class TodoRessource {
         }
         return todoToUpdate;
     }
+
+    @DELETE
+    @Path("/delete/{id}")
+    public Todo supprimerParId(@PathParam("id") int id) throws SQLException {
+        Todo todoDelete = todoDao.getTodoById(id);
+        if (todoDelete != null){
+            todoDao.deleteTodo(id);
+        } else {
+            return null;
+        }
+        return todoDelete;
+    }
 }

@@ -21,6 +21,8 @@ public class TodoDao {
     private static final String CREATE_TODO = "INSERT INTO todo (titre, descriptionTodo, dateTodo, id_urgence, id_utilisateur) VALUES (?, ?, ?, ?, ?)";
     private final String UPDATE_BY_ID = "UPDATE todo SET titre = ?, descriptionTodo = ?, dateTodo = ?, id_urgence = ?, id_utilisateur = ? WHERE id = ?";
 
+    private final String DELETE_BY_ID = "DELETE FROM todo WHERE id = ?";
+
     public List<Todo> getAllTodo() {
         List<Todo> todoList = null;
         try {
@@ -227,10 +229,23 @@ public class TodoDao {
             statement.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
             statement.setInt(4, todo.getId_urgence());
             statement.setInt(5, todo.getId_utilisateur());
+            statement.setInt(6, todo.getId());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e){
             e.printStackTrace();
+        }
+    }
+
+    public void deleteTodo(int id){
+        try {
+            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+            Connection con = DriverManager.getConnection(url, username, password);
+            PreparedStatement statement = con.prepareStatement(DELETE_BY_ID);
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (Exception e){
+            System.out.println(e);
         }
     }
 }
